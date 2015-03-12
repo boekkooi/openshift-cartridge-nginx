@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+  -v|--version)
+    version="$2"
+esac
+
+# Resolve version
+NGINX_VERSION=1.6.2
+if [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
+    NGINX_VERSION="${version}"
+fi
+
+# Create dirs
+dirs=( "logs" "run" "env" )
+for dir in ${dirs[@]}; do
+    mkdir -p "${OPENSHIFT_NGINX_DIR}/${dir}"
+done
+
+# Set version env variable
+export OPENSHIFT_NGINX_VERSION=${NGINX_VERSION}
+
+echo "${NGINX_VERSION}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_VERSION
+echo "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}" > ${OPENSHIFT_NGINX_DIR}/env/OPENSHIFT_NGINX_VERSION_DIR

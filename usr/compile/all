@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+COMPRESS_DIR=$( cd "$( dirname "${CURRENT_DIR}" )" && pwd )
+
+for version in $(cat versions); do
+    if [ ! -z "${version}" ]; then
+        ${CURRENT_DIR}/build ${version}
+    fi
+done
+
+tar -zcvf ${OPENSHIFT_REPO_DIR}/web/nginx.tar.gz ${COMPRESS_DIR}

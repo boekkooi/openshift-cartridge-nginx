@@ -1,0 +1,63 @@
+#!/bin/bash
+set -e
+
+# Check arguments
+if [ -z "${1}" ]; then
+    echo "Usage: build <nginx_version>"
+    exit 1
+fi
+
+# Configure versions
+NGINX_VERSION="${1}"
+ZLIB_VERSION='1.2.8'
+PCRE_VERSION='8.36'
+
+# package names
+pkg=nginx-${NGINX_VERSION}.tar.gz
+pkg_pcre=pcre-${PCRE_VERSION}.tar.bz2
+pkg_zlib=zlib-${ZLIB_VERSION}.tar.gz
+
+# Import utils
+source build_util
+
+# Prepare build enviroment
+CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+BUILD_DIR="${CURRENT_DIR}/tmp"
+TARGET_DIR="$(dirname "${CURRENT_DIR}")/nginx-${NGINX_VERSION}"
+
+if [ -d "${TARGET_DIR}" ]; then
+    rm -rf "${TARGET_DIR}"
+fi
+
+mkdir -p ${BUILD_DIR}
+pushd ${BUILD_DIR}
+
+# Get packages
+download_and_unpack ${pkg_pcre} ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${pkg_pcre}
+download_and_unpack ${pkg_zlib} http://zlib.net/${pkg_zlib}
+download_and_unpack ${pkg} http://nginx.org/download/${pkg}
+
+# Go to source
+pushd nginx-${NGINX_VERSION}
+
+# Configuring nginx
+./configure \
+    --with-http_ssl_module \
+    --with-http_sub_module \
+    --with-zlib=${BUILD_DIR}/zlib-${ZLIB_VERSION} \
+    --with-pcre=${BUILD_DIR}/pcre-${PCRE_VERSION} \
+    --with-http_ssl_module \
+    --with-http_realip_module \
+    --with-http_gzip_static_module \
+    --with-ipv6 \
+    --prefix=${TARGET_DIR}
+
+# Compiling nginx
+make install
+
+# Clean build enviroment
+popd
+popd
+rm -rf ${BUILD_DIR}
+
+exit 0
