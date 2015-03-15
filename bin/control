@@ -40,6 +40,16 @@ function hasconfig() {
 function _nginx_start() {
     if hasconfig; then
         ${NGINX_EXEC} -c ${NGINX_CONFIG_FILE} -p ${OPENSHIFT_NGINX_DIR} 2>&1
+
+        if [ $? -ne 0 ]; then
+            echo "Error starting nginx"
+        elif ! isrunning; then
+            local TIMEOUT="${STARTTIMEOUT}"
+            while [ ${TIMEOUT} -gt 0 ] && [ ! -f "${OPENSHIFT_NGINX_PID}" ]; do
+                sleep .5
+                let TIMEOUT=${TIMEOUT}-1
+            done
+        fi
     fi
 }
 
