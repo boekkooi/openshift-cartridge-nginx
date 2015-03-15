@@ -8,7 +8,9 @@ esac
 
 # Resolve version
 NGINX_VERSION=1.6.2
-if [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
+if [ ! -z "${OPENSHIFT_NGINX_VERSION}" ] && [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}/" ]; then
+    NGINX_VERSION="${OPENSHIFT_NGINX_VERSION}"
+elif [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
     NGINX_VERSION="${version}"
 fi
 
