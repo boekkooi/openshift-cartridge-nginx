@@ -15,7 +15,7 @@ worker_processes 2;
 worker_rlimit_nofile 8192;
 
 error_log  <%= ENV['OPENSHIFT_LOG_DIR'] %>/nginx_error.log;
-pid        <%= ENV['OPENSHIFT_NGINX_DIR'] %>/run/nginx.pid;
+pid        <%= ENV['OPENSHIFT_NGINX_PID'] %>;
 
 events {
   # When you need > 8000 * cpu_cores connections, you start optimizing

@@ -13,7 +13,7 @@ if [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
 fi
 
 # Create dirs
-dirs=( "logs" "run" "env" )
+dirs=( "logs" "run" )
 for dir in ${dirs[@]}; do
     mkdir -p "${OPENSHIFT_NGINX_DIR}/${dir}"
 done
