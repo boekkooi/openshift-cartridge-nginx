@@ -5,16 +5,16 @@
 # of static files, which requires blocking disk reads, you may want
 # to increase this from the number of cpu_cores available on your
 # system.
-#
 # The maximum number of connections for Nginx is calculated by:
 # max_clients = worker_processes * worker_connections
-worker_processes 2;
+worker_processes auto;
 
 # Maximum file descriptors that can be opened per process
 # This should be > worker_connections
 worker_rlimit_nofile 8192;
+pcre_jit on;
 
-error_log  <%= ENV['OPENSHIFT_LOG_DIR'] %>/nginx_error.log;
+error_log  <%= ENV['OPENSHIFT_LOG_DIR'] %>/nginx_error.log crit;
 pid        <%= ENV['OPENSHIFT_NGINX_PID'] %>;
 
 events {
@@ -24,14 +24,15 @@ events {
   worker_connections  8000;
 
   # This sets up some smart queueing for accept(2)'ing requests
-  # Set it to "on" if you have > worker_processes
-  accept_mutex off;
+  # Set it to "on" if nginx worker_processes > 1
+  accept_mutex on;
 
   # These settings are OS specific, by defualt Nginx uses select(2),
   # however, for a large number of requests epoll(2) and kqueue(2)
   # are generally faster than the default (select(2))
-  # use epoll; # enable for Linux 2.6+
   # use kqueue; # enable for *BSD (FreeBSD, OS X, ..)
+  use epoll; # enable for Linux 2.6+
+  multi_accept on; # a worker process will accept all new connections at a time
 }
 
 http {
@@ -49,10 +50,10 @@ http {
       '"$request" $body_bytes_sent "$http_referer" '
       '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log  <%= ENV['OPENSHIFT_LOG_DIR'] %>/nginx_access.log  main;
-
+    access_log  <%= ENV['OPENSHIFT_LOG_DIR'] %>/nginx_access.log  main buffer=16k;
+    
     sendfile on;
     keepalive_timeout 65;
-
-    include  <%= ENV['OPENSHIFT_NGINX_DIR'] %>/conf/nginx_http.conf;
+    
+    include  	<%= ENV['OPENSHIFT_NGINX_DIR'] %>/conf/nginx_http.conf;
 }

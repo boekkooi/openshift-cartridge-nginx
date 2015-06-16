@@ -10,4 +10,4 @@ for version in $(cat versions); do
     fi
 done
 
-tar -zcvf ${OPENSHIFT_REPO_DIR}/web/nginx.tar.gz ${COMPRESS_DIR}
+tar -zcvf ${OPENSHIFT_REPO_DIR}/public/nginx.tar.gz ${COMPRESS_DIR}
