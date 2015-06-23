@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+# Build PHP extra's
+# Update conf/ini files and install pecl extensions
+${OPENSHIFT_PHP_DIR}/bin/control build

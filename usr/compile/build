@@ -10,12 +10,16 @@ fi
 # Configure versions
 NGINX_VERSION="${1}"
 ZLIB_VERSION='1.2.8'
-PCRE_VERSION='8.36'
+PCRE_VERSION='8.37'
+PURGE_VERSION='2.3'
+HTTPREDIS_VERSION='0.3.7'
 
 # package names
 pkg=nginx-${NGINX_VERSION}.tar.gz
 pkg_pcre=pcre-${PCRE_VERSION}.tar.bz2
 pkg_zlib=zlib-${ZLIB_VERSION}.tar.gz
+pkg_purge=ngx_cache_purge-2.3.tar.gz
+pkg_httpredis=ngx_http_redis-0.3.7.tar.gz
 
 # Import utils
 source build_util
@@ -35,6 +39,8 @@ pushd ${BUILD_DIR}
 # Get packages
 download_and_unpack ${pkg_pcre} ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${pkg_pcre}
 download_and_unpack ${pkg_zlib} http://zlib.net/${pkg_zlib}
+download_and_unpack ${pkg_purge} http://labs.frickle.com/files/${pkg_purge}
+download_and_unpack ${pkg_httpredis} http://people.FreeBSD.org/~osa/${pkg_httpredis}
 download_and_unpack ${pkg} http://nginx.org/download/${pkg}
 
 # Go to source
@@ -42,13 +48,28 @@ pushd nginx-${NGINX_VERSION}
 
 # Configuring nginx
 ./configure \
-    --with-http_ssl_module \
-    --with-http_sub_module \
+    --http-client-body-temp-path=${OPENSHIFT_TMP_DIR}/client_body_temp \
+	--http-proxy-temp-path=${OPENSHIFT_TMP_DIR}/proxy_temp \
+	--http-fastcgi-temp-path=${OPENSHIFT_TMP_DIR}/fastcgi_temp \
+	--http-uwsgi-temp-path=${OPENSHIFT_TMP_DIR}/uwsgi_temp \
+	--http-scgi-temp-path=${OPENSHIFT_TMP_DIR}/scgi_temp \
+	--error-log-path=${OPENSHIFT_LOG_DIR}/nginx_error.log \
+	--http-log-path=${OPENSHIFT_LOG_DIR}/nginx_access.log \
+	--pid-path=${OPENSHIFT_NGINX_DIR}/run/nginx.pid \
+	--lock-path=${OPENSHIFT_NGINX_DIR}/run/nginx.lock \
     --with-zlib=${BUILD_DIR}/zlib-${ZLIB_VERSION} \
+    --add-module=${BUILD_DIR}/ngx_cache_purge-2.3 \
     --with-pcre=${BUILD_DIR}/pcre-${PCRE_VERSION} \
+    --with-pcre-jit \
     --with-http_ssl_module \
+    --with-http_spdy_module \
+    --with-http_secure_link_module \
+    --with-http_sub_module \
+    --with-http_stub_status_module \
     --with-http_realip_module \
+    --with-http_gunzip_module \
     --with-http_gzip_static_module \
+    --with-http_image_filter_module \
     --with-ipv6 \
     --prefix=${TARGET_DIR}
 
