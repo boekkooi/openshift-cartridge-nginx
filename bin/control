@@ -152,14 +152,32 @@ function build() {
     _nginx_update_conf
 }
 
+function _forward_control_to_plugin() {
+    # Because plugins don't receive some command we forward them
+    if [ ! -z ${OPENSHIFT_PHP_DIR} ]; then
+        ${OPENSHIFT_PHP_DIR}/bin/control "$1"
+    fi
+}
+
 case "$1" in
-  start)     start ;;
+  start)
+    _forward_control_to_plugin "$1"
+    start
+  ;;
   stop)      stop ;;
   restart)   restart ;;
   status)    status ;;
   reload)    reload ;;
   tidy)      tidy ;;
-  update)    update ;;
-  build)     build ;;
+  update)
+    _forward_control_to_plugin "$1"
+    update
+  ;;
+  build)
+    _forward_control_to_plugin "$1"
+    build
+  ;;
   *)         exit 0
 esac
+
+
