@@ -7,7 +7,7 @@ case "$1" in
 esac
 
 # Resolve version
-NGINX_VERSION=1.8.0
+NGINX_VERSION=1.9.9
 if [ ! -z "${OPENSHIFT_NGINX_VERSION}" ] && [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}/" ]; then
     NGINX_VERSION="${OPENSHIFT_NGINX_VERSION}"
 elif [ -d "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}/" ]; then
