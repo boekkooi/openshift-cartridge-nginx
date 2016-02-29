@@ -1,7 +1,7 @@
 # Openshift Nginx Cartridge
 Welcome to a life where [nginx](http://nginx.org/) is possible on [openshift](https://www.openshift.com/).
 
-This cartridge allow you to create a scalable nginx application, defaulting to using nginx version 1.9.9.
+This cartridge allow you to create a scalable nginx application, defaulting to using nginx version 1.9.12.
 Combine this with the [boekkooi PHP cartridge](https://github.com/boekkooi/openshift-cartridge-php) and you have a scalable application using the latest versions.
 
 Just create your app using:
@@ -21,6 +21,7 @@ Currently this cartridge has the following versions:
 - 1.7.10
 - 1.8.0
 - 1.9.9
+- 1.9.12
 
 If you need another version you can compile it yourself and submit a PR to get it integrated.
 
