@@ -12,7 +12,7 @@ case "$1" in
     version="$2"
 esac
 
-NGINX_VERSION=1.9.12
+NGINX_VERSION=1.11.1
 if [ ! -z "${OPENSHIFT_NGINX_VERSION}" ] && [ -f "${OPENSHIFT_NGINX_DIR}/usr/nginx-${OPENSHIFT_NGINX_VERSION}.tar.gz" ]; then
     NGINX_VERSION="${OPENSHIFT_NGINX_VERSION}"
 elif [ -f "${OPENSHIFT_NGINX_DIR}/usr/nginx-${version}.tar.gz" ]; then

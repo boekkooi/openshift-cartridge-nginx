@@ -17,11 +17,14 @@ rhc create-app myapp --env OPENSHIFT_NGINX_VERSION=1.8.0 http://cartreflect-clay
 
 ## Versions
 Currently this cartridge has the following versions:
-- 1.6.2
-- 1.7.10
-- 1.8.0
-- 1.9.9
+
+- 1.11.1
+- 1.10.1
 - 1.9.12
+- 1.9.9
+- 1.8.0
+- 1.7.10
+- 1.6.2
 
 If you need another version you can compile it yourself and submit a PR to get it integrated.
 
@@ -38,11 +41,14 @@ SSH into you app and go to the compile folder (`cd ${OPENSHIFT_REPO_DIR}/nginx/c
 ```BASH
 ./all
 ```
-Once compiling is done you can download the `nginx.tar.gz` from you application.
-Extract the `nginx-{version}` from the archive and place them into the `openshift-cartridge-nginx/usr` folder.
+Once compiling is done you can download the `nginx-{version}.tar.gz` from you application.
+Place the archive into the `openshift-cartridge-nginx/usr` folder.
 Last but not least edit the `openshift-cartridge-nginx/manifest.yml` and add the versions.
 
-All done just commit and push to your `openshift-cartridge-nginx` repo and use:
+(Make sure you have [Git LFS](https://git-lfs.github.com/) installed.)
+Now commit and push to your `openshift-cartridge-nginx` repo and create a [PR](https://github.com/boekkooi/openshift-cartridge-nginx/pulls).
+
+To use your own fork make sure you change `LFS_ENDPOINT` in `openshift-cartridge-php/bin/setup` and use:
 ```BASH
-http://cartreflect-claytondev.rhcloud.com/github/<user>/openshift-cartridge-nginx
+rhc cartridge add -a myapp http://cartreflect-claytondev.rhcloud.com/github/<user>/openshift-cartridge-nginx
 ```
