@@ -9,5 +9,3 @@ for version in $(cat versions); do
         ${CURRENT_DIR}/build ${version}
     fi
 done
-
-tar -zcvf ${OPENSHIFT_REPO_DIR}/web/nginx.tar.gz ${COMPRESS_DIR}
