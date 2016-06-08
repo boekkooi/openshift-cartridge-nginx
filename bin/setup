@@ -3,7 +3,9 @@ set -e
 
 source "${OPENSHIFT_NGINX_DIR}/bin/setup_util.sh"
 
-# LFS configuration
+# Archive/LFS configuration
+declare -a ARCHIVE_SERVERS
+ARCHIVE_SERVERS=( "http://download-bcartridges.rhcloud.com/nginx" )
 LFS_ENDPOINT=https://github.com/boekkooi/openshift-cartridge-nginx.git/info/lfs
 
 # Resolve version
@@ -21,7 +23,7 @@ fi
 NGINX_VERSION_DIR="${OPENSHIFT_NGINX_DIR}/usr/nginx-${NGINX_VERSION}"
 
 # Download and extract PHP version from LFS
-lfs_download_and_extact
+nginx_download_and_unpack
 if [ ! -d "${NGINX_VERSION_DIR}" ]; then
     echo "Failed to download and extract nginx from LFS"
     exit 1
