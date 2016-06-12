@@ -139,9 +139,13 @@ function reload() {
 }
 
 function tidy() {
-    client_message "Emptying log dir: ${OPENSHIFT_NGINX_DIR}/logs"
     shopt -s dotglob
+
+    client_message "Emptying log dir: ${OPENSHIFT_NGINX_DIR}/logs"
     rm -rf ${OPENSHIFT_NGINX_DIR}/logs/*
+
+    client_message "Emptying nginx logs in dir: ${OPENSHIFT_LOG_DIR}"
+    rm -rf ${OPENSHIFT_LOG_DIR}/nginx*
 }
 
 function update() {
